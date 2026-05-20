@@ -1,6 +1,6 @@
 <div align="center">
 
-<h1>🌟 小红书AI发布助手</h1>
+<h1>🌟 小红书 AI Content Operation Agent</h1>
 
 ![Python Version](https://img.shields.io/badge/Python-3.8%2B-3776AB?style=for-the-badge&logo=python&logoColor=white) ![License](https://img.shields.io/badge/License-Apache%202.0-4CAF50?style=for-the-badge&logo=apache&logoColor=white) ![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-0078D4?style=for-the-badge&logo=windows&logoColor=white) ![Version](https://img.shields.io/badge/Version-2.0.0-FF6B35?style=for-the-badge&logo=rocket&logoColor=white)
 
@@ -10,7 +10,7 @@
 
 <br/><br/>
 
-### 🎨 智能内容创作 • 🤖 AI驱动 • 📱 一键发布
+### 🤖 多 Agent 内容运营 • 📊 自动选题审核 • 📱 一键/定时发布
 
 [🇨🇳 简体中文](./readme.md) | [🇺🇸 English](./readme_en.md)
 
@@ -31,10 +31,12 @@
 
 ## 📖 项目简介
 
-> **小红书AI发布助手** 是一个功能强大的自动化内容创作与发布工具，专为小红书平台的内容创作者设计。
+> **小红书 AI Content Operation Agent** 是面向小红书/内容平台场景的多 Agent 内容运营系统，支持自动选题、资料检索、内容生成、质量审核、自动改写、封面生成、定时发布和效果复盘。
 
 🎯 **核心价值**
-- 🧠 **智能创作**: 基于先进AI技术自动生成高质量内容
+- 🧠 **Agent 化运营**: 通过选题、写作、审核、改写、发布、复盘 Agent 串联内容生产链路
+- 📊 **自动决策**: 基于热度、风险、小红书适配度自动筛选更值得写的选题
+- 🛡️ **质量闭环**: Review Agent 按标题吸引力、完整度、风格、风险、AI 味等维度打分，不合格自动改写
 - ⚡ **效率提升**: 一键操作节省90%发布时间
 - 🎨 **专业品质**: 精美界面设计，用户体验极佳
 - 🔧 **功能完整**: 从内容生成到发布全流程自动化
@@ -48,6 +50,7 @@
 <td width="50%">
 
 ### 🤖 AI智能生成
+- 🧭 **多 Agent 工作流**: TopicAgent 自动选题，ReviewAgent 质量评分，RewriterAgent 自动改写，WorkflowAgent 输出 `publish.json`
 - 🎯 **智能标题**: AI生成吸引人的标题
 - 📝 **内容创作**: 基于主题自动生成文章
 - 🔧 **自定义模型**: 支持配置 OpenAI 兼容/Claude/Ollama 等接口用于内容生成（未配置则回退到内置方案）
@@ -101,6 +104,7 @@
 ├── 🧰 install.bat                   # 📦 一键安装（Windows）
 ├── 📂 src/                          # 🔧 源代码目录
 │   ├── 📂 core/                     # ⚡ 核心功能模块
+│   │   ├── 📂 agents/               # 🤖 Agent 入口（选题/审核/改写/发布工作流）
 │   │   ├── 📂 models/               # 🗄️ 数据模型
 │   │   ├── 📂 services/             # 🔧 业务服务层
 │   │   ├── 📂 pages/                # 🎨 界面页面
@@ -121,6 +125,19 @@
 ├── ⚙️ .env.example                  # 🔑 环境变量示例（不要提交真实 .env）
 ├── 📋 requirements.txt              # 📦 依赖包列表
 └── 📖 readme.md                     # 📚 项目说明
+```
+
+### 🤖 Agent 工作流
+
+```text
+热点/输入
+→ TopicAgent 评分选题（热度/风险/小红书适配）
+→ WriterAgent 生成初稿
+→ ReviewAgent 多维度审核打分
+→ RewriterAgent 自动改写，直到达到阈值或达到最大轮次
+→ CoverAgent 生成封面/内容图
+→ PublisherAgent 调用发布工具
+→ AnalyticsAgent 记录发布数据并支持复盘
 ```
 
 ---

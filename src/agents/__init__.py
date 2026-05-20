@@ -8,7 +8,9 @@ from src.agents.analytics_agent import AnalyticsAgent
 from src.agents.cover_agent import CoverAgent, CoverResult
 from src.agents.hot_agent import HotAgent, TopicCandidate
 from src.agents.publish_agent import PublishAgent
+from src.agents.rewriter_agent import RewriterAgent, RewriteResult
 from src.agents.review_agent import ReviewAgent
+from src.agents.topic_agent import TopicAgent, TopicDecision
 from src.agents.workflow_agent import ContentWorkflowAgent, HotspotWorkflowRequest
 from src.agents.writer_agent import GeneratedCopy, WriterAgent
 
@@ -21,7 +23,11 @@ __all__ = [
     "HotAgent",
     "HotspotWorkflowRequest",
     "PublishAgent",
+    "RewriterAgent",
+    "RewriteResult",
     "ReviewAgent",
+    "TopicAgent",
     "TopicCandidate",
+    "TopicDecision",
     "WriterAgent",
 ]

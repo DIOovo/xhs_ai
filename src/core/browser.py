@@ -4,7 +4,7 @@ import os
 import sys
 from functools import partial
 
-from src.agents.publish_agent import PublishAgent
+from src.agents.workflow_agent import ContentWorkflowAgent
 from src.core.write_xiaohongshu import XiaohongshuPoster
 
 
@@ -131,11 +131,15 @@ class BrowserThread(QThread):
 
                         self.login_success.emit(self.poster)
                     elif action['type'] == 'preview' and self.poster:
-                        await PublishAgent().preview(
+                        await ContentWorkflowAgent().publish_payload(
                             self.poster,
-                            action['title'],
-                            action['content'],
-                            action['images'],
+                            {
+                                "title": action['title'],
+                                "content": action['content'],
+                                "images": action['images'],
+                            },
+                            auto_publish=False,
+                            record_analytics=False,
                         )
                         self.preview_success.emit()
                     elif action['type'] == 'scheduled_publish':
@@ -188,6 +192,7 @@ class BrowserThread(QThread):
         title = str(action.get("title") or "")
         content = str(action.get("content") or "")
         images = action.get("images") or []
+        payload = {}
 
         if isinstance(images, (list, tuple)):
             images = [p for p in images if isinstance(p, str) and p and os.path.isfile(p)]
@@ -226,6 +231,16 @@ class BrowserThread(QThread):
                     images = [p for p in images if isinstance(p, str) and p and os.path.isfile(p)]
                 else:
                     images = []
+            payload = {
+                "schema": "xhs_ai.publish_payload.v1",
+                "platform": str(action.get("platform") or "xiaohongshu").strip() or "xiaohongshu",
+                "user_id": user_id,
+                "title": title,
+                "content": content,
+                "images": images,
+                "tags": ContentWorkflowAgent._extract_tags(content),
+                "agent_steps": [],
+            }
 
         # 默认使用当前用户
         if not user_id:
@@ -288,7 +303,13 @@ class BrowserThread(QThread):
                 poster_is_ephemeral = True
 
             await poster.initialize()
-            await PublishAgent().publish(poster, title, content, images, auto_publish=True)
+            payload.update({"title": title, "content": content, "images": images, "user_id": target_uid})
+            await ContentWorkflowAgent().publish_payload(
+                poster,
+                payload,
+                auto_publish=True,
+                record_analytics=self._bool_action_flag(action.get("record_analytics", True), default=True),
+            )
             self.scheduled_task_result.emit(task_id, True, "")
         except Exception as e:
             self.scheduled_task_result.emit(task_id, False, str(e))
@@ -316,11 +337,22 @@ class BrowserThread(QThread):
     @classmethod
     def _build_hotspot_payload_sync(cls, action: dict) -> dict:
         """生成热点定时任务的标题/内容/图片（同步，便于放入线程池执行）。"""
-        from src.agents.workflow_agent import ContentWorkflowAgent
-
         workflow = ContentWorkflowAgent()
         request = ContentWorkflowAgent.request_from_action(action)
         return workflow.build_hotspot_payload(request)
+
+    @staticmethod
+    def _bool_action_flag(value, *, default: bool = False) -> bool:
+        if value is None:
+            return default
+        if isinstance(value, bool):
+            return value
+        if isinstance(value, str):
+            text = value.strip().lower()
+            if not text:
+                return default
+            return text not in {"0", "false", "no", "n", "off"}
+        return bool(value)
 
     def stop(self):
         self.is_running = False

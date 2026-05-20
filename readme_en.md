@@ -1,4 +1,4 @@
-# 🌟 Xiaohongshu AI Publisher
+# 🌟 Xiaohongshu AI Content Operation Agent
 
 <div align="center">
 
@@ -15,7 +15,7 @@
 
 <br/><br/>
 
-<h3>🎨 Smart Content Creation • 🤖 AI-Powered • 📱 One-Click Publishing</h3>
+<h3>🤖 Multi-Agent Content Ops • 📊 Topic Review Loop • 📱 One-Click / Scheduled Publishing</h3>
 
 [🇨🇳 简体中文](./readme.md) | [🇺🇸 English](./readme_en.md)
 
@@ -36,10 +36,12 @@
 
 ## 📖 Project Overview
 
-> **Xiaohongshu AI Publisher** is a powerful automated content creation and publishing tool, specifically designed for content creators on the Xiaohongshu platform.
+> **Xiaohongshu AI Content Operation Agent** is a multi-agent content operations system for Xiaohongshu-style publishing. It supports automated topic selection, research context, content generation, quality review, automatic rewriting, cover generation, scheduled publishing, and performance review.
 
 🎯 **Core Values**
-- 🧠 **Smart Creation**: Generate high-quality content with advanced AI technology
+- 🧠 **Agentic Operations**: Topic, writer, review, rewriter, publisher, and analytics agents work as one content pipeline
+- 📊 **Automated Decisions**: Rank topics by heat, risk, and Xiaohongshu fit before writing
+- 🛡️ **Quality Loop**: ReviewAgent scores title appeal, completeness, Xiaohongshu style, risk, AI taste, repetition, and tags; RewriterAgent revises drafts below threshold
 - ⚡ **Efficiency Boost**: One-click operation saves 90% of publishing time
 - 🎨 **Professional Quality**: Beautiful interface design with excellent user experience
 - 🔧 **Complete Features**: Full automation from content generation to publishing
@@ -53,6 +55,7 @@
 <td width="50%">
 
 ### 🤖 AI Smart Generation
+- 🧭 **Multi-Agent Workflow**: TopicAgent selects topics, ReviewAgent scores quality, RewriterAgent rewrites weak drafts, and WorkflowAgent outputs `publish.json`
 - 🎯 **Smart Titles**: AI-generated engaging titles
 - 📝 **Content Creation**: Auto-generate articles based on topics
 - 🔧 **Custom Models**: Configure OpenAI-compatible / Claude / Ollama endpoints for generation (falls back to built-in methods if not configured)
@@ -107,6 +110,7 @@
 ├── 🧰 install.bat                   # 📦 One-click install (Windows)
 ├── 📂 src/                          # 🔧 Source Code Directory
 │   ├── 📂 core/                     # ⚡ Core Functionality Modules
+│   │   ├── 📂 agents/               # 🤖 Agent entrypoints (topic/review/rewrite/publish workflow)
 │   │   ├── 📂 models/               # 🗄️ Data Models
 │   │   ├── 📂 services/             # 🔧 Business Service Layer
 │   │   ├── 📂 pages/                # 🎨 UI Pages
@@ -124,6 +128,19 @@
 ├── ⚙️ .env.example                  # 🔑 Env example (do not commit real .env)
 ├── 📋 requirements.txt              # 📦 Dependencies List
 └── 📖 readme_en.md                  # 📚 Project Documentation
+```
+
+### 🤖 Agent Workflow
+
+```text
+Hotspot/Input
+→ TopicAgent scores topic candidates (heat/risk/platform fit)
+→ WriterAgent drafts title and content
+→ ReviewAgent performs multi-dimensional quality review
+→ RewriterAgent revises until the score passes or max rounds are reached
+→ CoverAgent generates cover/content images
+→ PublisherAgent calls the publishing tool
+→ AnalyticsAgent records published content for later review
 ```
 
 ---
